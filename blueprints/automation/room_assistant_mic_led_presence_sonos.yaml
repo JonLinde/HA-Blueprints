@@ -1,0 +1,67 @@
+blueprint:
+  name: Room Assistant Mic + LED based on Presence & Sonos
+  description: >
+    Mute the assistant microphone and turn off the LED ring when the room is empty
+    AND Sonos is playing. Otherwise enable the mic and LED.
+  domain: automation
+
+  input:
+    presence_sensor:
+      name: Presence sensor
+      selector:
+        entity:
+          domain: binary_sensor
+
+    sonos_player:
+      name: Sonos media player
+      selector:
+        entity:
+          domain: media_player
+
+    assistant_mic_switch:
+      name: Assistant microphone switch (mute control)
+      description: >
+        Switch entity that mutes/unmutes the assistant mic.
+        This blueprint assumes: switch ON = mic muted, switch OFF = mic active.
+      selector:
+        entity:
+          domain: switch
+
+    assistant_led:
+      name: Assistant LED ring light
+      selector:
+        entity:
+          domain: light
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input presence_sensor
+  - platform: state
+    entity_id: !input sonos_player
+
+action:
+  - choose:
+      - conditions:
+          - condition: state
+            entity_id: !input presence_sensor
+            state: "off"
+          - condition: state
+            entity_id: !input sonos_player
+            state: "playing"
+        sequence:
+          - service: switch.turn_on
+            target:
+              entity_id: !input assistant_mic_switch
+          - service: light.turn_off
+            target:
+              entity_id: !input assistant_led
+
+    default:
+      - service: switch.turn_off
+        target:
+          entity_id: !input assistant_mic_switch
+      - service: light.turn_on
+        target:
+          entity_id: !input assistant_led

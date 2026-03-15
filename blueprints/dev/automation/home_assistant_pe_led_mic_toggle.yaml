@@ -1,0 +1,3 @@
+blueprint:
+  name: Home Assistant PE LED/Mic toggle (dev)
+  description: This blueprint is designed for the Preview Edition assistant and integrates with Sonos.  It allows control over the LED and microphone toggle based on the defined conditions.

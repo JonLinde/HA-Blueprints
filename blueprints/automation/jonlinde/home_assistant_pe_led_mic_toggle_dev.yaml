@@ -1,0 +1,6 @@
+blueprint:
+  name: Home Assistant PE LED/Mic toggle (dev)
+  description: This blueprint allows you to toggle the PE LED and Mic in Home Assistant.
+  domain: automation
+
+# Your existing automation logic goes here
